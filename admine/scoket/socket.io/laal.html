@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>lala</title>
+    <script src="../../node_modules/socket.io-client/dist/socket.io.js"></script>
+
+</head>
+<body>
+    ALALALAL
+    <script>
+        const socket = io('http://localhost:3005');
+        socket.on('bobo',(msg)=>{
+            alert(msg)
+        })
+        socket.on('all',(msg)=>{
+            alert(msg)    
+        })
+    </script>
+</body>
+</html>

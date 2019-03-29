@@ -1,10 +1,13 @@
-import React from 'react';
+import React,{Component} from 'react';
 import ReactDOM from 'react-dom';
 import './common/style/index.less';
-import App from './App';
+import Route from './components/pages/Route';
 import * as serviceWorker from './serviceWorker';
+import Axios from './axios/axios'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+Component.prototype.$axios=Axios
+
+ReactDOM.render(<Route />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

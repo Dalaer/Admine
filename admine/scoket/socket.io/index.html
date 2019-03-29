@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>socket.io</title>
+    <script src="../../node_modules/socket.io-client/dist/socket.io.js"></script>
+</head>
+<body>
+    hahahahahhahaha
+    <button onclick='send()'>sendmessage</button>
+    <button onclick='sendMsg()'>发事件</button>
+    <button onclick='sendAll()'>sendAll</button>
+    <script>
+        var socket = io('http://localhost:3005');
+        
+        // 监听服务器端的事件
+        socket.on('hello',(msg)=>{
+            console.log(msg)
+        })
+
+        // 拿到服务器直接发送的数据
+        socket.on('message',(msg)=>{
+            console.log(msg)
+        })
+        
+        // 直接向服务器发送数据
+        socket.send('hi')
+        
+        // 向服务器发送东西
+        function send(){
+            socket.emit('dala','为了谁？为了谁？为了亲爱的战友你别流泪~~o(╥﹏╥)o')
+        }
+        
+        // 监听广播
+        function sendMsg(){
+            socket.emit('bobo' )
+        }
+        socket.on('bobo',(msg)=>{
+            alert(msg)
+        })
+
+        // 向所有的客户端发送消息
+        function sendAll(){
+            socket.emit('all')
+        }
+        socket.on('all',(msg)=>{
+            alert(msg)    
+        })
+
+    </script>
+</body>
+</html>

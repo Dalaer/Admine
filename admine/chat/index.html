@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>建议聊天室</title>
+    <script src="/scoket.io.js"></script>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        body{
+            background:rgb(240, 232, 232);
+        }
+        #txt{width:70%;margin:8px;padding:8px;}
+        button{padding:8px;background:skyblue;border:none;}
+        ::-webkit-input-placeholder { /* WebKit browsers */
+            color:#bbb;
+        }
+        .chatRoom{
+            width:90%;
+            height:500px;
+            overflow:auto;
+            border:steelblue 1px dashed;
+            margin:10px;
+        }
+        .chatRoom li{
+            list-style:none;
+            padding:6px;
+            border-bottom:teal 1px dashed;
+            color:darksalmon;
+        }
+        .chatRoom li span{font-size:12px;color:darkgray}
+        .chatRoom li i{
+            font-style:normal;
+            color:#000;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="txt" placeholder="请您善良"><button onclick='sendContent()' id="btn">SUBMIT</button>
+    <h3></h3>
+    <div class="chatRoom">
+    </div>
+    <button onclick='chatRecord()'>拿到聊天记录</button>
+    <script>
+        let txt = document.getElementById('txt');
+        let btn = document.getElementById('btn');
+        let room = document.getElementsByClassName('chatRoom')[0];
+        let hh = document.querySelector('h3');
+        var socket = io('http://10.9.22.183:3006');
+        // 定义一个空数组---存放渲染的数据
+        let contentList=[];
+        // 自己起个名儿
+        var name = prompt('你叫什么名字呀');
+        if(name){
+            socket.emit('getName',name)
+            socket.on('singleMsg',(msg)=>{
+                alert(msg.data)
+            })
+        }
+        hh.innerHTML=name;
+        // 先把首先加入聊天室的人添进数组
+        sendRecord(addList(name,'加入聊天室'));
+
+        // 发起内容
+        function sendContent(){
+            let val = txt.value;
+            // 将当前用户说的话也放到数组中
+            sendRecord(addList(name,val))
+            // 给服务器发送内容
+            socket.emit('chatContent',val)
+            // 在本地渲染内容
+            newLi('我',val,new Date().toLocaleString(),room)
+            // 将input框清空
+            txt.value=''
+        }
+        // 监听是否有小朋友来啦
+        socket.on('broadcast',(data)=>{
+            // 判断是何种记录
+            let obj ;
+            switch(data.event){
+                // 用户进入聊天室
+                case 'new_user_join':
+                obj=addList(data.data.name,'加入了聊天室')
+                break;
+                // 用户发起内容
+                case 'new_chat_content':
+                obj=addList(data.data.name,data.data.content)
+                break;
+                // 用户离开了
+                case 'someone_exit':
+                obj=addList(data.data.name,'离开了聊天室')
+                break;
+            }
+            contentList.push(obj);
+            // 将这条数据发送给服务器--存到聊天记录中
+            sendRecord(obj)
+            // 每改变一次 就监听一次
+            renderList(contentList,room)
+        })
+
+        
+        // 遍历数组 渲染数组
+        function renderList(contentList,room){
+            for(let i = 0 ,length=contentList.length;i<length;i++){
+                let txt = contentList[i]
+                newLi(txt.name,txt.val,txt.time,room)
+            }
+        }
+        
+        // 新建一个聊天室中的li 内容显示 、 小伙伴新进去 、小伙伴离开
+        function newLi(name,val,time,room){
+            let lis = document.createElement('li');
+            let str =`<span>(${time})</span><b>${name}</b> : <i>${val}</i>`;
+            lis.innerHTML=str;
+            room.appendChild(lis);
+        }
+        
+        // 往数组添加的数据的样式
+        function addList(name,val){
+            return {
+                name,val,
+                time:new Date().toLocaleString()
+            }
+        }
+        
+        // 给服务器发送聊天记录
+        function sendRecord(obj){
+            socket.emit('sendRecord',obj)
+        }
+        
+        // 拿到聊天记录
+        function chatRecord(){
+            socket.emit('chat')
+        }
+        // 得放到函数外面 因为如果放到里面 每点一下就会监听一下这个chatRecord 所以就会累加
+        socket.on('chatRecord',(msg)=>{
+            // 聊天记录
+            let list = msg;
+            // 将聊天记录显示出来---是否已经点过一遍了
+            let content = document.querySelectorAll('.chatRoom')[1]
+            if(content){
+                // 让之后的在这里显示
+                content.innerHTML=''
+                renderList(list,content)
+            }else{
+                content = document.createElement('div');
+                content.className='chatRoom';
+                document.body.append(content);
+                renderList(list,content)
+            }
+
+        })
+        // 断开连接
+        socket.on('disconnect',()=>{
+            console.log('断开连接')
+        })
+    </script>
+</body>
+</html>

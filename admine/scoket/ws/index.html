@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>alalalalla</h1>
+    <button onclick='send()'>发送数据</button>
+    <button onclick='clos()'>断开连接啦</button>
+    <button onclick='bobo()'>广播</button>
+    <button onclick='table()'>表格数据</button>
+    <script>
+        const ws = new WebSocket('ws://localhost:8081/')
+
+        // 与服务器端进行连接
+        ws.onopen=()=>{
+            console.log('与服务器端连接')
+        }
+
+        // 客户端接收服务器端发送的数据
+        ws.onmessage=(msg)=>{
+            console.log('服务器端发送数据',msg)
+            console.log(JSON.parse(msg.data))
+        }
+
+        // 向服务器发送数据
+        function send(){
+            ws.send('lalalalla')
+        }
+
+        // 与服务器断开连接
+        function clos(){
+            ws.close()
+        }
+
+        // 广播
+        function bobo(){
+            ws.send(JSON.stringify({type:'reward',msg:'中奖了！'}))
+        }
+
+        // 表格数据
+        function table(){
+            ws.send(JSON.stringify({type:'echart'}))
+        }
+        
+    </script>
+</body>
+</html>

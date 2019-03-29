@@ -1,9 +1,23 @@
 @import '../../../common/style/index.less';
 
 .home{
+    display:flex;
+    height:calc(100vh);
     .left{
         background:@bg-color;
         height:calc(100vh);
         min-width:180px;
+    }
+    .right{
+        .top{
+            height:calc(10vh);
+        }
+        .center{
+            height:calc(70vh);
+            background:#ececec;
+        }
+        .bottom{
+            height:calc(20vh)
+        }
     }
 }

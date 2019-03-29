@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>响应式原理</title>
+</head>
+<body>
+    <input type="text" oninput='giveVal(this)'><span></span>
+    <script>
+        let data = {};
+        let middle=''
+        Object.defineProperty(data,'input',{
+            get(){
+                return middle
+            },
+            set(val){
+                middle=val
+                watch()
+            }
+        })
+        // 将值赋给data.input
+        function giveVal(e){
+            let val = e.value;
+            // data.input 因为你object.defineProperty 监听的就是 data.input
+            data.input=val
+        }
+        // 将内容展现在span身上
+        function watch(){
+            document.querySelector('span').innerHTML=data.input;
+        }
+    </script>
+</body>
+</html>

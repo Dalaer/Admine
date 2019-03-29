@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import FirstRoute from './components/pages/FirstPage'
+// import Route from './components/pages/Route'
 import {HashRouter} from 'react-router-dom'
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <HashRouter>
+        {/* <HashRouter>
           <FirstRoute></FirstRoute>
-        </HashRouter>
+        </HashRouter> */}
+        {this.props.children}
       </div>
     );
   }
