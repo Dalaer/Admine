@@ -66,3 +66,9 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+#### 'chat'
+利用scoket.io来写的多人聊天室
+在chat文件夹中 运行node server.js
+打开http://10.9.22.183:3006
+然后就可以聊天了
